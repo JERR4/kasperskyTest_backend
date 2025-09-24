@@ -99,11 +99,14 @@ export class UsersService {
       groupId?: number;
     }>,
   ): Promise<User> {
+    console.log(data)
     const existingUser = await this.userRepository.findOne({
       where: { email: data.email },
     });
 
-    if (existingUser?.id !== id) {
+    console.log(existingUser)
+
+    if (existingUser && existingUser?.id !== id) {
       throw new ConflictException('Пользователь с таким email уже существует');
     }
 
