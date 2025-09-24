@@ -4,6 +4,7 @@ import { User } from '../users/user.entity';
 import { Group } from '../groups/group.entity';
 import * as path from 'path';
 import * as fs from 'fs/promises';
+import * as constants from 'node:constants';
 
 const dataSource = new DataSource({
   type: 'sqlite',
@@ -26,10 +27,18 @@ async function main() {
     await backupService.export();
   } else if (action === 'restore') {
     try {
-      await fs.access(filePath);
-      await backupService.restore();
+      await fs.access(filePath, constants.F_OK);
     } catch {
       console.error(`Файл бэкапа не найден: ${filePath}`);
+      process.exit(1);
+    }
+
+    try {
+      await backupService.restore();
+    } catch (err) {
+      console.error(
+        `Ошибка при восстановлении из бэкапа: ${(err as Error).message}`,
+      );
       process.exit(1);
     }
   } else {
