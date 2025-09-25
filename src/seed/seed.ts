@@ -2,6 +2,14 @@ import { DataSource } from 'typeorm';
 import { User } from '../users/models/user.entity';
 import { Group } from '../groups/models/group.entity';
 import { faker } from '@faker-js/faker';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+
+const dbFile = path.resolve(__dirname, '../../database.sqlite');
+if (fs.existsSync(dbFile)) {
+  fs.unlinkSync(dbFile);
+  console.log('Старый файл базы данных удалён');
+}
 
 const dataSource = new DataSource({
   type: 'sqlite',
