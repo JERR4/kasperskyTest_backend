@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { ILike, IsNull, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Group } from '../groups/group.entity';
@@ -23,38 +23,36 @@ export class UsersService {
     limit: number = 50,
     groupId?: number | 'none',
   ) {
-    const qb = this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.group', 'group');
+    const where: any = {};
 
     if (nameSearch) {
-      qb.andWhere('user.name LIKE :name', { name: `%${nameSearch}%` });
+      where.name = ILike(`%${nameSearch}%`);
     }
 
     if (emailSearch) {
-      qb.andWhere('user.email LIKE :email', { email: `%${emailSearch}%` });
+      where.email = ILike(`%${emailSearch}%`);
     }
 
     if (groupId !== undefined) {
       if (groupId === 'none') {
-        qb.andWhere('user.group IS NULL');
+        where.group = IsNull();
       } else {
-        qb.andWhere('group.id = :groupId', { groupId });
+        where.group = { id: groupId };
       }
     }
 
-    if (sort) {
-      qb.orderBy(`user.${sort}`, order);
-    }
-
-    const [users, total] = await qb
-      .skip((page - 1) * limit)
-      .take(limit)
-      .getManyAndCount();
+    const [users, total] = await this.userRepository.findAndCount({
+      where,
+      relations: ['group'],
+      order: { [sort]: order },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
 
     const data = users.map(u => new UserResponseDto(u));
     return { data, total, page, limit };
   }
+
 
   async findOne(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
