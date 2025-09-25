@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { User } from '../users/user.entity';
-import { Group } from '../groups/group.entity';
+import { User } from '../users/models/user.entity';
+import { Group } from '../groups/models/group.entity';
 import * as fs from 'fs/promises';
 
 interface BackupData {
@@ -47,4 +47,3 @@ export class BackupService {
     console.log('Database restored from', this.backupFile);
   }
 }
-

@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Group } from '../groups/group.entity';
+import { Group } from '../../groups/models/group.entity';
 
 @Entity()
 export class User {

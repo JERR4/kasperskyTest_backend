@@ -10,7 +10,7 @@ import {
   IsOptional,
 } from 'class-validator';
 
-import { User } from '../user.entity';
+import { User } from '../models/user.entity';
 
 @ValidatorConstraint({ async: false })
 export class IsValidNameConstraint implements ValidatorConstraintInterface {

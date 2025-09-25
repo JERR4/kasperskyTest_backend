@@ -31,7 +31,7 @@ npm install
 * Для заполнения базы начальными данными (400 пользователей, 5 групп):
 
 ```bash
-ts-node src/seed.ts
+ts-node src/seed/seed.ts
 ```
 
 ### Запуск сервера

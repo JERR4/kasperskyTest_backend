@@ -1,8 +1,8 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { ILike, IsNull, Repository } from 'typeorm';
-import { User } from '../user.entity';
+import { User } from '../models/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Group } from '../../groups/group.entity';
+import { Group } from '../../groups/models/group.entity';
 import { UserResponseDto } from '../dto/users.dto';
 
 @Injectable()
